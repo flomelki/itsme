@@ -1,0 +1,41 @@
+**** Fonctionnelles ****
+
+WhatsApp-like privé = possibilité de chatter avec des membres autorisés sur le réseau
+
+v1.Client
+Log automatique
+Donner un nom au premier login
+Envoi de message
+Lecture des messages précédents
+Une couleur par user
+Un seul espace de discussion pour tous
+
+v1.Admin
+Ajouter / autoriser un user
+Quelques stats de base
+
+
+**** Techniques ****
+
+Client :
+- Affichage en react + bootstrap
+- connexion webSocket avec le serveur afin de pouvoir envoyer des messages et en recevoir en mode "push"
+
+Admin :
+- react + bootstrap
+- d3
+- appels de webservices pour chopper les stats
+
+Server :
+- une webSocket qui tourne pour réception / push
+- des webservices koa pour les stats
+Question : séparer le webSocket et les webServices koa
+Réponse : oui
+>> faire deux serveurs
+
+BDD :
+- sqlLite
+- schéma :
+> users : id / color / name
+> messages : datetime / content / FK_users
+>> DONE
