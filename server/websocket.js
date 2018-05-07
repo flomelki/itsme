@@ -10,8 +10,8 @@ var server = http.createServer(function(request, response) {
     response.end();
 });
 
-server.listen(8080, function() {
-    console.log((new Date()) + ' Server is listening on port 8080');
+server.listen(8066, function() {
+    console.log((new Date()) + ' Server is listening on port 8066');
 });
  
 wsServer = new WebSocketServer({
@@ -68,7 +68,7 @@ wsServer.on('request', function(request) {
     });
 });
 
-wsServer.on('close', function()
-{
-	db.close();
-})
+// wsServer.on('close', function()
+// {
+// 	db.close();
+// })

@@ -1,0 +1,8 @@
+.loginbox
+{
+	border-radius: 10px;
+	border-width: 2px;
+	border-color: grey;
+	border-style: groove;
+	padding-bottom: 1em;
+}

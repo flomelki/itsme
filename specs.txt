@@ -1,9 +1,11 @@
 **** Fonctionnelles ****
 
 WhatsApp-like privé = possibilité de chatter avec des membres autorisés sur le réseau
+Nom : itsme
 
 v1.Client
 Log automatique
+>> a priori pas possible. Remplacer par login / mdp
 Donner un nom au premier login
 Envoi de message
 Lecture des messages précédents
@@ -28,7 +30,13 @@ Admin :
 
 Server :
 - une webSocket qui tourne pour réception / push
+> check le token envoyé
+> pour chaque message envoyé, rafraîchit le token en bdd
 - des webservices koa pour les stats
+- un ws pour le login
+> check le login / mdp donné
+> crée un token en bdd avec une validité de 24h
+> renvoie le token au client
 Question : séparer le webSocket et les webServices koa
 Réponse : oui
 >> faire deux serveurs
