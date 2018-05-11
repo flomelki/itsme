@@ -8,18 +8,8 @@ export default class Network
     // req.setRequestHeader("Accept-Encoding", "gzip, deflate");
 
     req.onreadystatechange = function (aEvt) {
-      if (req.readyState == 4) {
-       if(req.status == 200){
-        if (callback)
-        {
-          callback(req.response);
-        }
-      }
-      else{
-        console.dir(req);
-        console.dir(`erreur pendant le chargement de la page ${url}`);
-
-      }
+      if (req.readyState === 4) {
+        manageResponse(req, callback);
     }
   };
   req.send(null);
@@ -32,19 +22,27 @@ static putAsyncRequest(url, body, callback)
  req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
  req.onreadystatechange = function (aEvt) {
-  if (req.readyState == 4) {
-   if(req.status == 200){
-    if (callback)
-    {
-      callback(req.response);
-    }
-  }
-  else{
-    console.dir(req);
-    console.dir(`erreur pendant le chargement de la page ${url}`);
+  if (req.readyState === 4) {
+    manageResponse(req, callback);
   }
 }
-};
 req.send(body);   
 }
+} // and export
+
+function manageResponse(req, callback)
+{
+  console.dir(req)
+  switch(req.status)
+  {
+    case(200):
+      if (callback) callback({status : 'ok', rawResponse : req.response === 'OK' ? '' : JSON.parse(req.response) })
+        break;
+    case(204):
+      if (callback) callback({ status : 'nok' });
+      break;
+    default:
+      console.dir(req);
+    break;
+  }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import LoginBox from './LoginBox';
-import logo from './logo.svg';
 import './App.css';
 import './bootstrap.css';
 
@@ -24,12 +23,16 @@ class App extends Component {
       {
 
         return (
-          <LoginBox className='mx-auto' callback={(loggedState) => this.setLoggedState(loggedState) } />
+          <div className='row'>
+          <div className='mx-auto'>
+          <LoginBox callback={(loggedState) => this.setLoggedState(loggedState) } />
+          </div>
+          </div>
           );
         }
         else
         {
-          return (<h1>GG</h1>);
+          return (<h1>TODO</h1>);
         }
       }
 

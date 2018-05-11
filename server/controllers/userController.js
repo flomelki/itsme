@@ -31,7 +31,7 @@ const btoa = require('btoa');
 				});	
 			});
 			let res = await promise;
-			if (res.status === 'ok')	ctx.ok(res);
+			if (res.status === 'ok')	ctx.ok({ token : res.token });
 			else	ctx.noContent();
 		}
 
@@ -44,7 +44,7 @@ const btoa = require('btoa');
 		async function checkUser(ctx)
 		{
 			if (await getUsername(ctx.params.username))
-				ctx.ok({	status : 'ok'	});
+				ctx.ok();
 			else 
 				ctx.noContent();
 		}
@@ -61,7 +61,7 @@ const btoa = require('btoa');
 			{
 				let randomColor = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
 				db.run(`insert into users values(null, '${ctx.request.body.username}', '${ctx.request.body.pwd}', '${randomColor}')`);
-				ctx.ok({ status : 'ok' });
+				ctx.ok();
 			}
 			else	{
 				ctx.noContent();
