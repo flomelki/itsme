@@ -9,6 +9,8 @@ class App extends Component {
   {
     super();
 
+    this.state = { loggedState : false };
+
       // let ws = new WebSocket("ws://localhost:8066", "echo-protocol");
       // ws.onopen = function(even) 
       // {
@@ -16,21 +18,27 @@ class App extends Component {
       // }
 
 
-  }
-  render() {
-    return (
-      <LoginBox className='mx-auto'></LoginBox>
-    //   <div className="App">
-    //     <header className="App-header">
-    //       <img src={logo} className="App-logo" alt="logo" />
-    //       <h1 className="App-title">Welcome to React</h1>
-    //     </header>
-    //     <p className="App-intro">
-    //       To get started, edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //   </div>
-    );
-  }
-}
+    }
+    render() {
+      if (!this.state.loggedState)
+      {
 
-export default App;
+        return (
+          <LoginBox className='mx-auto' callback={(loggedState) => this.setLoggedState(loggedState) } />
+          );
+        }
+        else
+        {
+          return (<h1>GG</h1>);
+        }
+      }
+
+      setLoggedState(loggedState)
+      {
+        console.log(loggedState)
+        this.setState({ loggedState : loggedState})
+      }
+
+    }
+
+    export default App;

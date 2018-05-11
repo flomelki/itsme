@@ -6,6 +6,22 @@ import './LoginBox.css';
 import Network from './lib/network.js';
 
 class LoginBox extends Component {
+
+
+  propTypes : {
+    callback: React.PropTypes.func
+  };
+
+
+  constructor()
+  {
+    super();
+  }
+
+  componentDidMount() {
+    // this.props.callback(true);
+  }
+
   render() {
     return (
       <div className='col-md-offset-5 col-md-2 loginbox '>
@@ -29,12 +45,12 @@ class LoginBox extends Component {
       <div className="btn-group" role="group">
       <button type="button" className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, function(res) { console.log(res);} ) } }>Login</button>
       <button type="button" className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username' : document.getElementById('username').value, 'pwd' : document.getElementById('password').value }), function(res) { console.log(res);} ) } }>Subscribe</button>
-      </div>
-      </div>
-      </div>
-      </div>
-      );
+        </div>
+        </div>
+        </div>
+        </div>
+        );
+    }
   }
-}
 
-export default LoginBox;
+  export default LoginBox;
