@@ -16,7 +16,7 @@ const btoa = require('btoa');
 					if (row && row.length === 1)
 					{
 						let now = Date.now();
-						let token = btoa(now.toString());
+						let token = btoa(now.toString());	// TODO : mix with random value
 						let end = now + 24*3600*1000;
 						console.log(`insert into tokens values('${token}', '${end}')`)
 						db.run(`insert into tokens values('${token}', '${end}')`);

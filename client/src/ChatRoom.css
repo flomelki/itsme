@@ -1,0 +1,36 @@
+:root
+{
+  --talk-height: 3em;
+}
+
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#chatroom
+{
+    min-height: 100%;
+    height: 100%;
+}
+
+#root
+{
+  min-height: inherit;
+  height: inherit;
+}
+
+#messages
+{
+  height: calc(100% - var(--talk-height));
+  overflow-y: auto;
+}
+
+#talk
+{
+  height: var(--talk-height);
+}

@@ -32,7 +32,6 @@ req.send(body);
 
 function manageResponse(req, callback)
 {
-  console.dir(req)
   switch(req.status)
   {
     case(200):
