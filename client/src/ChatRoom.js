@@ -39,8 +39,9 @@ class ChatRoom extends Component {
               <input id='talkinput' type="text" className="form-control" placeholder="Talk there" aria-label="Talk there" aria-describedby="talkinput-addon"></input>
               <button type="button" className="btn btn-secondary" onClick={() => {
                 let messages = this.state.messages;
-                messages.push(`${document.getElementById('talkinput').value}`);
+                messages.push({msg : `${document.getElementById('talkinput').value}`, date : Date.now()});
                 this.setState({messages : messages});
+                document.getElementById('talkinput').value = '';
               }} >Send</button>
             </div>
           </div>
