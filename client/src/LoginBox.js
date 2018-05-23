@@ -5,7 +5,7 @@ import Network from './lib/network.js';
 
 class LoginBox extends Component {
   propTypes: {
-    callback: React.PropTypes.func
+    callback: React.PropTypes.func,
   };
 
   constructor() {
@@ -16,7 +16,7 @@ class LoginBox extends Component {
   handleLogin(res) {
     this.resetStatuses();
     if (res.status === 'ok')
-      this.props.callback(true, res.rawResponse.token);
+      this.props.callback(true, res.rawResponse.userid, res.rawResponse.token, res.rawResponse.color);
     else
       this.setState({ loginStatus: res.status });
   }

@@ -11,7 +11,7 @@ class App extends Component {
   constructor() {
     super();
 
-    this.state = { loggedState: false, token : '' };
+    this.state = { loggedState: false, userId : null, token : '', userColor : '' };
   }
 
   render() {
@@ -20,22 +20,18 @@ class App extends Component {
       return (
         <div className='container justify-content-md-center'>
           <div className="row justify-content-md-center">
-            <LoginBox callback={(loggedState, token) => this.setLoggedState(loggedState, token)} />
+            <LoginBox callback={(loggedState, userId, token, userColor) => this.setLoggedState(loggedState, userId, token, userColor)} />
           </div>
         </div>
       );
     }
     else {
-      return (<ChatRoom callback={(loggedState) => this.setLoggedState(loggedState)} token={this.state.token} />);
+      return (<ChatRoom callback={(loggedState) => this.setLoggedState(loggedState)} token={this.state.token} userColor={this.state.userColor} userId={this.state.userId} />);
     }
   }
 
-  setLoggedState(loggedState) {
-    this.setState({ loggedState: loggedState });
-  }
-
-  setLoggedState(loggedState, token) {
-    this.setState({ loggedState: loggedState, token : token })
+  setLoggedState(loggedState, userId, token, userColor) {
+    this.setState({ loggedState: loggedState, userId : userId, token : token, userColor : userColor })
   }
 
 }
