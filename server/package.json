@@ -17,6 +17,7 @@
     "koa-logger": "^3.2.0",
     "koa-respond": "^1.0.1",
     "koa-router": "^7.4.0",
+    "log4js": "^2.7.0",
     "md5": "^2.2.1",
     "sqlite3": "^4.0.0",
     "websocket": "^1.0.25"

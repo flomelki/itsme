@@ -3,15 +3,16 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('itsme.db');
+const logger = require('./libs/logger.js');
 
 var server = http.createServer(function(request, response) {
-    console.log((new Date()) + ' Received request for ' + request.url);
+    logger.warn((new Date()) + ' Received request for ' + request.url);
     response.writeHead(404);
     response.end();
 });
 
 server.listen(8066, function() {
-    console.log((new Date()) + ' Server is listening on port 8066');
+    logger.warn((new Date()) + ' Server is listening on port 8066');
 });
  
 wsServer = new WebSocketServer({
@@ -44,18 +45,17 @@ wsServer.on('request', function(request) {
     if (!originIsAllowed(request.origin)) {
       // Make sure we only accept requests from an allowed origin
       request.reject();
-      console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
+      logger.warn((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
       return;
     }
     
     var connection = request.accept('echo-protocol', request.origin);
-    console.log((new Date()) + ' Connection accepted.');
+    logger.trace((new Date()) + ' Connection accepted.');
 
     connection.on('message', function(message) {
         setInterval(function()
         {
             let r = Math.floor(Math.random() * 3 + 1);
-            // console.log(r);
             connection.sendUTF(JSON.stringify({
                 userId : r,
                 msg : r,
@@ -74,11 +74,6 @@ wsServer.on('request', function(request) {
         // }
     });
     connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        logger.trace((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
     });
 });
-
-// wsServer.on('close', function()
-// {
-// 	db.close();
-// })
