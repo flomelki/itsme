@@ -8,22 +8,27 @@ const md5 = require('md5');
 		either a token with 24 hours validity + the user's color + 'ok' status
 		either 'nok' status
 		*/
-		async function getUser(ctx)
+		async function logUser(ctx)
 		{
 			let promise = new Promise((resolve, reject) => {
 				db.all(`select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}';`, function(err, row)
 				{
+					console.log(row)
 					if (row && row.length === 1)
 					{
+						console.log('ok')
+						let user = row[0];
 						let now = Date.now();
-						let token = md5(now.toString());	// TODO : mix with random value
+						let token = md5(now.toString());
 						let end = now + 24*3600*1000;
-						console.log(`insert into tokens values('${token}', '${end}')`)
-						db.run(`insert into tokens values('${token}', '${end}')`);
+						console.log(`insert into tokens values('${token}', '${user.userid}', '${end}')`)
+						db.run(`insert into tokens values('${token}', '${user.userid}', '${end}')`);
 						resolve(
 						{
 							status : 'ok',
-							token : token
+							userid : user.userid,
+							token : token,
+							color : user.color,
 						});
 					}
 					else 
@@ -31,7 +36,7 @@ const md5 = require('md5');
 				});	
 			});
 			let res = await promise;
-			if (res.status === 'ok')	ctx.ok({ token : res.token });
+			if (res.status === 'ok')	ctx.ok({ userid : res.userid, token : res.token, color : res.color });
 			else	ctx.noContent();
 		}
 
@@ -91,7 +96,7 @@ const md5 = require('md5');
 
 
 		module.exports = {
-			getUser,
+			logUser,
 			checkUser,
 			createUser,
 		}

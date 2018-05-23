@@ -52,7 +52,17 @@ wsServer.on('request', function(request) {
     console.log((new Date()) + ' Connection accepted.');
 
     connection.on('message', function(message) {
-
+        setInterval(function()
+        {
+            let r = Math.floor(Math.random() * 3 + 1);
+            // console.log(r);
+            connection.sendUTF(JSON.stringify({
+                userId : r,
+                msg : r,
+                msgdt : Date.now(),
+                username : 'johndoe'
+                 }));
+        }, 1000);
 
         // if (message.type === 'utf8') {
         //     console.log('Received Message: ' + message.utf8Data);
