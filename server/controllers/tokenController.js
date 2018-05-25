@@ -25,18 +25,21 @@ async function createToken(ctx) {
         });
     });
 
+    let res;
     try {
-        let res = await promise;
-        ctx.ok({ token: res });
-        return { token: res };
+        res = await promise;
+
     }
     catch (e) {
         logger.error(e);
     }
+
+    ctx.ok({ token: res });
+    return { token: res };
 }
 
 /*
-	refresh a given token for a given userid
+	refresh a given token for a given userid only if this token is still alive
 	returns
 		either 'ok' status
 		either 'nok' status
@@ -44,22 +47,42 @@ async function createToken(ctx) {
 async function refreshToken(ctx) {
     logger.trace(`Refresh token ${ctx.params.token} for userid ${ctx.params.userid}`);
     let promise = new Promise((resolve, reject) => {
-        let now = Date.now();
-        let end = now + 24 * 3600 * 1000;
-        logger.trace(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`)
-        db.run(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`, (err) => {
-            if (err) reject(err);
-            resolve();
+        db.all(`select * from tokens where token = '${ctx.params.token}' and userid = '${ctx.params.userid}';`, function (err, row) {
+            if (err) {
+				logger.error(err);
+				reject(err);
+			}
+
+            if (row && row.length === 1)
+            {
+                let now = Date.now();
+                let end = now + 24 * 3600 * 1000;
+
+                if (row.enddate > end)
+                {
+                    logger.trace(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`)
+                    db.run(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`, (err) => {
+                        if (err) reject(err);
+                        resolve('ok');
+                    });
+                }
+                else    resolve('nok');
+            }
+
         });
+
+
     });
 
+    let status;
     try {
-        await promise;
+        status = await promise;
     }
     catch (e) {
         logger.error(e);
     }
-    ctx.ok()
+    if (status === 'ok')    ctx.ok();
+    else ctx.noContent();
 }
 
 
