@@ -45,23 +45,28 @@ async function createToken(ctx) {
 		either 'nok' status
 		*/
 async function refreshToken(ctx) {
-    logger.trace(`Refresh token ${ctx.params.token} for userid ${ctx.params.userid}`);
+    logger.trace(`Refresh token ${ctx.request.body.token} for userid ${ctx.request.body.userid}`);
     let promise = new Promise((resolve, reject) => {
-        db.all(`select * from tokens where token = '${ctx.params.token}' and userid = '${ctx.params.userid}';`, function (err, row) {
+        db.all(`select * from tokens where token = '${ctx.request.body.token}' and userid = '${ctx.request.body.userid}';`, function (err, row) {
             if (err) {
 				logger.error(err);
 				reject(err);
 			}
 
+            logger.debug(row)
             if (row && row.length === 1)
             {
                 let now = Date.now();
                 let end = now + 24 * 3600 * 1000;
-
-                if (row.enddate > end)
+                
+                logger.debug(`now : ${now}`)
+                logger.debug(`current token end date : ${row[0].enddate}`)
+                logger.debug(`next token end date : ${end}`)
+                
+                if (row[0].enddate > now)
                 {
-                    logger.trace(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`)
-                    db.run(`update token set enddate = '${end}' where token = '${ctx.params.token}' and userid = '${ctx.params.userid}'`, (err) => {
+                    logger.trace(`update tokens set enddate = '${end}' where token = '${ctx.request.body.token}' and userid = '${ctx.request.body.userid}'`)
+                    db.run(`update tokens set enddate = '${end}' where token = '${ctx.request.body.token}' and userid = '${ctx.request.body.userid}'`, (err) => {
                         if (err) reject(err);
                         resolve('ok');
                     });
@@ -81,6 +86,9 @@ async function refreshToken(ctx) {
     catch (e) {
         logger.error(e);
     }
+
+    logger.debug(status)
+    
     if (status === 'ok')    ctx.ok();
     else ctx.noContent();
 }
