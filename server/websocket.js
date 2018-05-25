@@ -31,8 +31,7 @@ wsServer = new WebSocketServer({
 	*/
 function originIsAllowed(origin) {
     if (wsServer.autoAcceptConnections) return true;
-    
-    return origin === 'http://locahost:3000';
+    return origin === 'http://localhost:3000';
 }
 
 /*
@@ -55,15 +54,23 @@ wsServer.on('request', function (request) {
     logger.trace((new Date()) + ' Connection accepted.');
 
     connection.on('message', function (message) {
-        setInterval(function () {
-            let r = Math.floor(Math.random() * 3 + 1);
-            connection.sendUTF(JSON.stringify({
-                userId: r,
-                msg: r,
-                msgdt: Date.now(),
-                username: 'johndoe'
-            }));
-        }, 1000);
+        let msg = JSON.parse(message.utf8Data);
+        logger.debug(msg)
+        connection.sendUTF(JSON.stringify({
+            userId: msg.userId,
+            content: msg.content,
+            msgdt: msg.msgdt,
+            // username: message.username,
+        }));
+        // setInterval(function () {
+        //     let r = Math.floor(Math.random() * 3 + 1);
+        //     connection.sendUTF(JSON.stringify({
+        //         userId: r,
+        //         msg: r,
+        //         msgdt: Date.now(),
+        //         username: 'johndoe'
+        //     }));
+        // }, 1000);
 
         // if (message.type === 'utf8') {
         //     console.log('Received Message: ' + message.utf8Data);
