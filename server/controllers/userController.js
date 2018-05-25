@@ -2,47 +2,58 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('itsme.db');
 const md5 = require('md5');
 const logger = require('../libs/logger.js');
+const tokenCtrl = require('./tokenController.js');
 
 /*
 	retrieves username & password details
 	returns
-		either a token with 24 hours validity + the user's color + 'ok' status
+		either user's details + 'ok' status
 		either 'nok' status
 		*/
-		async function logUser(ctx)
-		{
-			logger.trace(`Logging user ${ctx.params.username}`);
-			let promise = new Promise((resolve, reject) => {
-				db.all(`select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}';`, function(err, row)
-				{
-					if (row && row.length === 1)
+async function logUser(ctx) {
+	logger.trace(`Logging user ${ctx.params.username}`);
+	let promise = new Promise((resolve, reject) => {
+		db.all(`select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}';`, function (err, row) {
+			if (err) {
+				logger.error(err);
+				reject(err);
+			}
+
+			if (row && row.length === 1) {
+				logger.trace(`User ${ctx.params.username} logged`);
+				let user = row[0];
+				resolve(
 					{
-						logger.trace(`User ${ctx.params.username} logged`);
-						let user = row[0];
-						let now = Date.now();
-						let token = md5(now.toString());
-						let end = now + 24*3600*1000;
-						logger.trace(`insert into tokens values('${token}', '${user.userid}', '${end}')`)
-						db.run(`insert into tokens values('${token}', '${user.userid}', '${end}')`);
-						resolve(
-						{
-							status : 'ok',
-							userid : user.userid,
-							token : token,
-							color : user.color,
-						});
-					}
-					else
-					{
-						logger.warn(`Unabled to log user ${ctx.params.username}`);
-						resolve({	status : 'nok'	});
-					}
-				});	
-			});
-			let res = await promise;
-			if (res.status === 'ok')	ctx.ok({ userid : res.userid, token : res.token, color : res.color });
-			else	ctx.noContent();
+						status: 'ok',
+						userid: user.userid,
+						color: user.color,
+					});
+			}
+			else {
+				logger.warn(`Unabled to log user ${ctx.params.username}`);
+				resolve({ status: 'nok' });
+			}
+		});
+	});
+
+	let res;
+	try {
+		loginState = await promise;
+		if (loginState.status === 'ok') {
+			ctx.params.userid = loginState.userid;
+			tokenState = await tokenCtrl.createToken(ctx);
+			res = { userid: loginState.userid, token: tokenState.token, color: loginState.color };
 		}
+	}
+	catch (e) {
+		logger.error(e);
+	}
+
+	if (res.userid !== undefined)
+		ctx.ok(res);
+	else
+		ctx.noContent();
+}
 
 /*
 	checks that a given username is free
@@ -50,13 +61,12 @@ const logger = require('../libs/logger.js');
 		either 'ok' status
 		either 'nok' status
 		*/
-		async function checkUser(ctx)
-		{
-			if (await getUsername(ctx.params.username))
-				ctx.ok();
-			else 
-				ctx.noContent();
-		}
+async function checkUser(ctx) {
+	if (await getUsername(ctx.params.username))
+		ctx.ok();
+	else
+		ctx.noContent();
+}
 
 /*
 	records a username + password
@@ -64,43 +74,37 @@ const logger = require('../libs/logger.js');
 	returns
 		TODO
 		*/
-		async function createUser(ctx)
-		{
-			if (await getUsername(ctx.request.body.username))
-			{
-				let randomColor = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
-				db.run(`insert into users values(null, '${ctx.request.body.username}', '${ctx.request.body.pwd}', '${randomColor}')`);
-				ctx.ok();
+async function createUser(ctx) {
+	if (await getUsername(ctx.request.body.username)) {
+		let randomColor = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
+		db.run(`insert into users values(null, '${ctx.request.body.username}', '${ctx.request.body.pwd}', '${randomColor}')`);
+		ctx.ok();
+	}
+	else {
+		ctx.noContent();
+	}
+}
+
+function getUsername(username) {
+	let promise = new Promise((resolve, reject) => {
+		db.all(`select * from users where username = '${username}';`, function (err, row) {
+			if (err) {
+				console.dir(err)
+				throw (err);
 			}
-			else	{
-				ctx.noContent();
-			}
-		}
 
-		function getUsername(username)
-		{
-			let promise = new Promise((resolve, reject) =>
-			{
-				db.all(`select * from users where username = '${username}';`, function(err, row)
-				{
-					if (err)
-					{
-						console.dir(err)
-						throw (err);
-					}
-
-					if (row.length === 0)
-						resolve(true);
-					else 
-						resolve(false);
-				});
-			})
-			return promise;
-		}
+			if (row.length === 0)
+				resolve(true);
+			else
+				resolve(false);
+		});
+	})
+	return promise;
+}
 
 
-		module.exports = {
-			logUser,
-			checkUser,
-			createUser,
-		}
+module.exports = {
+	logUser,
+	checkUser,
+	createUser,
+}
