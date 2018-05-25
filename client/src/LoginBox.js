@@ -15,8 +15,9 @@ class LoginBox extends Component {
 
   handleLogin(res) {
     this.resetStatuses();
-    if (res.status === 'ok')
-      this.props.callback(true, res.rawResponse.userid, res.rawResponse.token, res.rawResponse.color);
+    if (res.status === 'ok') {
+      this.props.callback(res.rawResponse.userid, res.rawResponse.token, res.rawResponse.color);
+    }
     else
       this.setState({ loginStatus: res.status });
   }
@@ -54,8 +55,8 @@ class LoginBox extends Component {
 
         <div className='row mx-auto'>
           <div className="btn-group col-md-12" role="group">
-            <button type="button" className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (ctx) => this.handleLogin(ctx)) }}>Login</button>
-            <button type="button" className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (ctx) => this.handleSubscribe(ctx)) }}>Subscribe</button>
+            <button type="button" className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res)) }}>Login</button>
+            <button type="button" className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (res) => this.handleSubscribe(res)) }}>Subscribe</button>
           </div>
         </div>
         <div className='row mx-auto'>

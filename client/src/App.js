@@ -11,28 +11,35 @@ class App extends Component {
   constructor() {
     super();
 
-    this.state = { loggedState: false, userId : null, token : '', userColor : '' };
+    this.state = { userId : null, token : null, userColor : null };
   }
 
   render() {
-    if (!this.state.loggedState) {
+    if (!this.loggedState()) {
 
       return (
         <div className='container justify-content-md-center'>
           <div className="row justify-content-md-center">
-            <LoginBox callback={(loggedState, userId, token, userColor) => this.setLoggedState(loggedState, userId, token, userColor)} />
+            <LoginBox callback={(userId, token, userColor) => this.setLoggedState(userId, token, userColor)} />
           </div>
         </div>
       );
     }
     else {
-      return (<ChatRoom callback={(loggedState) => this.setLoggedState(loggedState)} token={this.state.token} userColor={this.state.userColor} userId={this.state.userId} />);
+      return (<ChatRoom callback={(userId, token) => this.setLoggedState(userId, token)} token={this.state.token} userId={this.state.userId} />);
     }
   }
 
-  setLoggedState(loggedState, userId, token, userColor) {
-    this.setState({ loggedState: loggedState, userId : userId, token : token, userColor : userColor })
+  setLoggedState(userId, token, userColor) {
+
+    this.setState({ userId : userId, token : token })
   }
+
+  loggedState()
+  {
+    return this.state.userId !== null;
+  }
+
 
 }
 
