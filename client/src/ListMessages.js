@@ -13,7 +13,6 @@ class ListMessages extends Component {
     };
 
     render() {
-console.dir(this.props.messages)
         if (this.props.messages.length > 0)
             return _.orderBy(this.props.messages, ['date'], ['desc']).map((el) =>
                 <div key={el.key} style={{ 'display': 'flow-root' }}>

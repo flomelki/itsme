@@ -64,7 +64,6 @@ class LoginBox extends Component {
             <input id='password' type="password" className="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon" onKeyUp={() => this.handlePasswordFill()}></input>
           </div>
         </div>
-
         <div className='row mx-auto'>
           <div className="btn-group col-md-12" role="group">
             <button type="button" disabled={!this.state.okForLogin} className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res)) }}>Login</button>
