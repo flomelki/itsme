@@ -11,6 +11,7 @@ class ChatRoom extends Component {
     callback: React.PropTypes.func,
     token: React.PropTypes.string,
     userId: React.propTypes.string,
+    username: React.propTypes.string,
   };
 
   constructor() {
@@ -31,7 +32,7 @@ class ChatRoom extends Component {
       let data = JSON.parse(event.data);
       if (data.userId !== undefined) {
         let messages = _this.state.messages;
-        messages.push({ key: btoa(data.msgdt), msg: data.content, msgdt: data.msgdt, userId: data.userId, username: 'data.username' });
+        messages.push({ key: btoa(data.msgdt), msg: data.content, msgdt: data.msgdt, userId: data.userId, username: _this.props.username });
         _this.setState({ messages: messages });
       }
     }
@@ -56,7 +57,7 @@ class ChatRoom extends Component {
     return (
       <div id='chatroom'>
         <div id='messages' className='container'>
-          <div id='talkcontent'><ListMessages messages={this.state.messages} userId={this.props.userId} /></div>
+          <div id='talkcontent'><ListMessages messages={this.state.messages} userId={this.props.userId} username={this.props.username} /></div>
         </div>
 
         <div id='talk' className='row align-items-end'>

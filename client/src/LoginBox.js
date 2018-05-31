@@ -16,7 +16,7 @@ class LoginBox extends Component {
   handleLogin(res) {
     this.resetStatuses();
     if (res.status === 'ok') {
-      this.props.callback(res.rawResponse.userid, res.rawResponse.token, res.rawResponse.color);
+      this.props.callback(res.rawResponse.userid, document.getElementById('username').value, res.rawResponse.token, res.rawResponse.color);
     }
     else
       this.setState({ loginStatus: res.status });
