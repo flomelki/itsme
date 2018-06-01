@@ -10,7 +10,7 @@ class LoginBox extends Component {
 
   constructor() {
     super();
-    this.state = { loginStatus: null, subscribeStatus: null, usernameOk: false, pwdOk: false, okForLogin: false };
+    this.state = { loginStatus: null, subscribeStatus: null, usernameOk: false, pwdOk: false };
   }
 
   handleLogin(res) {
@@ -31,16 +31,11 @@ class LoginBox extends Component {
     this.setState({ loginStatus: null, subscribeStatus: null });
   }
 
-  handleUsernameFill()
+  handleFieldsFill()
   {
     let usernameOk = document.getElementById('username').value.length >= 3;
-    this.setState({usernameOk: usernameOk, okForLogin: usernameOk && this.state.pwdOk } );
-  }
-
-  handlePasswordFill()
-  {
     let pwdOk = document.getElementById('password').value.length >= 3;
-    this.setState({pwdOk: pwdOk, okForLogin: pwdOk && this.state.usernameOk } );
+    this.setState({usernameOk: usernameOk,pwdOk: pwdOk  } );
   }
 
   render() {
@@ -52,7 +47,7 @@ class LoginBox extends Component {
             <div className="input-group-prepend">
               <span className="input-group-text" id="username-addon">Username</span>
             </div>
-            <input id='username' type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="username-addon" onKeyUp={() => this.handleUsernameFill() }></input>
+            <input id='username' type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="username-addon" onKeyUp={() => this.handleFieldsFill() }></input>
           </div>
         </div>
 
@@ -61,13 +56,13 @@ class LoginBox extends Component {
             <div className="input-group-prepend">
               <span className="input-group-text" id="password-addon">Password</span>
             </div>
-            <input id='password' type="password" className="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon" onKeyUp={() => this.handlePasswordFill()}></input>
+            <input id='password' type="password" className="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon" onKeyUp={() => this.handleFieldsFill()}></input>
           </div>
         </div>
         <div className='row mx-auto'>
           <div className="btn-group col-md-12" role="group">
-            <button type="button" disabled={!this.state.okForLogin} className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res)) }}>Login</button>
-            <button type="button" disabled={!this.state.okForLogin} className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (res) => this.handleSubscribe(res)) }}>Subscribe</button>
+            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res)) }}>Login</button>
+            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (res) => this.handleSubscribe(res)) }}>Subscribe</button>
           </div>
         </div>
         <div className='row mx-auto'>
