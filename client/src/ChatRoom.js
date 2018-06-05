@@ -54,6 +54,8 @@ class ChatRoom extends Component {
   }
 
   render() {
+    let _this = this;
+
     return (
       <div id='chatroom'>
         <div id='messages' className='container'>
@@ -64,16 +66,16 @@ class ChatRoom extends Component {
           <div className='container'>
             <div className="input-group mb-3 col-md-12">
               <textarea id='talkinput' type='text' className="form-control" placeholder="Talk there" aria-label="Talk there" aria-describedby="talkinput-addon"
-                  onKeyUp={() => {
-                  let v = document.getElementById('talkinput').value;
-                  if (v.split('').pop() === '\n') {
-                    while(v.split('').pop() === '\n')
-                      v = v.replace('\n', '');
-
-                    document.getElementById('talkinput').value = v;
-                    if (v.length > 0) this.sendMessage();
-                  }
-                  else  document.getElementById('talkinput').value = v.replace('\n', '');
+                  onKeyPress={function(evt) {
+                    if (evt.charCode === 13)  // 13 == 'enter' key
+                    {
+                      evt.preventDefault();
+                      let v = document.getElementById('talkinput').value;
+                      if (v.length > 0)
+                      {
+                        _this.sendMessage();
+                      }
+                    }
                 }
                 }></textarea>
               <button type="button" className="btn btn-secondary" onClick={() => { this.sendMessage(); }} >Send</button>
@@ -83,7 +85,6 @@ class ChatRoom extends Component {
       </div>
     );
   }
-
 }
 
 export default ChatRoom;
