@@ -48,8 +48,8 @@ async function logUser(ctx) {
 	catch (e) {
 		logger.error(e);
 	}
-
-	if (res.userid !== undefined)
+	
+	if (res !== undefined && res.userid !== undefined)
 		ctx.ok(res);
 	else
 		ctx.noContent();
