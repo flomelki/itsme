@@ -1,6 +1,6 @@
 :root
 {
-  --talk-height: 3em;
+  --talk-height: 5em;
 }
 
 html {
@@ -33,4 +33,5 @@ body {
 #talk
 {
   height: var(--talk-height);
+
 }

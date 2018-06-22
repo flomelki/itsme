@@ -64,8 +64,8 @@ class ChatRoom extends Component {
 
         <div id='talk' className='row align-items-end'>
           <div className='container'>
-            <div className="input-group mb-3 col-md-12">
-              <textarea id='talkinput' type='text' className="form-control" placeholder="Talk there" aria-label="Talk there" aria-describedby="talkinput-addon"
+            <div className="input-group mb-3 col-12">
+              <textarea id='talkinput' rows='1' type='text' className="form-control" placeholder="Talk there" aria-label="Talk there" aria-describedby="talkinput-addon"
                   onKeyPress={function(evt) {
                     if (evt.charCode === 13)  // 13 == 'enter' key
                     {

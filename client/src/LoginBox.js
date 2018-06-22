@@ -31,23 +31,30 @@ class LoginBox extends Component {
     this.setState({ loginStatus: null, subscribeStatus: null });
   }
 
-  handleFieldsFill()
-  {
+  handleFieldsFill() {
     let usernameOk = document.getElementById('username').value.length >= 3;
     let pwdOk = document.getElementById('password').value.length >= 3;
-    this.setState({usernameOk: usernameOk,pwdOk: pwdOk  } );
+    this.setState({ usernameOk: usernameOk, pwdOk: pwdOk });
+  }
+
+  login() {
+    Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res));
+  }
+
+  subscribe() {
+    Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (res) => this.handleSubscribe(res));
   }
 
   render() {
     return (
-      <div className='loginbox col-6' >
+      <div className='loginbox col-md-6 col-12' >
         <div className='row'><header className='col'><h4>Connectez-vous sur itsme!</h4></header></div>
         <div className='row'>
           <div className="input-group mb-3 col">
             <div className="input-group-prepend">
               <span className="input-group-text" id="username-addon">Username</span>
             </div>
-            <input id='username' type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="username-addon" onKeyUp={() => this.handleFieldsFill() }></input>
+            <input id='username' type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="username-addon" onKeyUp={() => this.handleFieldsFill()}></input>
           </div>
         </div>
 
@@ -61,8 +68,14 @@ class LoginBox extends Component {
         </div>
         <div className='row mx-auto'>
           <div className="btn-group col-md-12" role="group">
-            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary" onClick={() => { Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${document.getElementById('password').value}`, (res) => this.handleLogin(res)) }}>Login</button>
-            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary" onClick={() => { Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': document.getElementById('password').value }), (res) => this.handleSubscribe(res)) }}>Subscribe</button>
+            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary"
+              onClick={() => { this.login(); }}
+              onTouchStart={() => { console.log('touching'); this.login(); }}
+            >Login</button>
+            <button type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary"
+              onClick={() => { this.subscribe(); }}
+              onTouchStart={() => { console.log('touching'); this.subscribe(); }}
+            >Subscribe</button>
           </div>
         </div>
         <div className='row mx-auto'>
@@ -72,5 +85,7 @@ class LoginBox extends Component {
     );
   }
 }
+
+
 
 export default LoginBox;
