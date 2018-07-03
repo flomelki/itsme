@@ -1,6 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('itsme.db');
-const md5 = require('md5');
 const logger = require('../libs/logger.js');
 const tokenCtrl = require('./tokenController.js');
 
