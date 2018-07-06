@@ -41,12 +41,12 @@ class LoginBox extends Component {
 
   login() {
     let password = sha1(sha1(document.getElementById('password').value).toString()+salt).toString();
-    Network.getAsyncRequest(`http://localhost:8067/users/${document.getElementById('username').value}/${password}`, (res) => this.handleLogin(res));
+    Network.getAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_USER_PORT}/users/${document.getElementById('username').value}/${password}`, (res) => this.handleLogin(res));
   }
 
   subscribe() {
     let password = sha1(sha1(document.getElementById('password').value).toString()+salt).toString();
-    Network.putAsyncRequest(`http://localhost:8067/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': password }), (res) => this.handleSubscribe(res));
+    Network.putAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_USER_PORT}/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': password }), (res) => this.handleSubscribe(res));
   }
 
   render() {

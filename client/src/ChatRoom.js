@@ -23,7 +23,7 @@ class ChatRoom extends Component {
   componentDidMount() {
     let _this = this;
 
-    ws = new WebSocket("ws://localhost:8066", 'itsme-protocol');
+    ws = new WebSocket(`ws://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_WS_PORT}`, 'itsme-protocol');
     // ws.onopen = function (even) {
     // ws.send();
     // }
@@ -43,7 +43,7 @@ class ChatRoom extends Component {
   }
 
   sendMessage() {
-    Network.postAsyncRequest(`http://localhost:8068/tokens/`, JSON.stringify({ 'userid': this.props.userId, 'token': this.props.token }), (res) => {
+    Network.postAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_TOKEN_PORT}/tokens/`, JSON.stringify({ 'userid': this.props.userId, 'token': this.props.token }), (res) => {
       if (res.status === 'ok') {
         ws.send(JSON.stringify({ userId: this.props.userId, content: document.getElementById('talkinput').value, msgdt: Date.now() }));
         document.getElementById('talkinput').value = '';

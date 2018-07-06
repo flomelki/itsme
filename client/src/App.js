@@ -7,10 +7,12 @@ import ChatRoom from './ChatRoom';
 import './App.css';
 import './bootstrap.css';
 
+// var config = new Config('./config/config_development');
+
 class App extends Component {
   constructor() {
     super();
-
+console.log(process.env)
     this.state = { userId : null, username : null, token : null, userColor : null };
   }
 
