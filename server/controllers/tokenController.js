@@ -8,10 +8,17 @@ const logger = require('../libs/logger.js');
 	returns the created token
 		*/
 async function createToken(ctx) {
-    logger.trace(ctx.params)
-    logger.trace(`Creating token for userid ${ctx.params.userid}`);
+    let userid = ctx.request.body.userid;
+    if (userid === undefined)
+    {
+        logger.trace(`Userid empty`);
+        console.dir(ctx.request)
+        ctx.noContent();
+        return;
+    }
+
+    logger.trace(`Creating token for userid ${userid}`);
     let promise = new Promise((resolve, reject) => {
-        let userid = ctx.params.userid;
         let now = Date.now();
         let token = md5(now.toString());
         let end = now + 24 * 3600 * 1000;

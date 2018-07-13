@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('itsme.db');
 const logger = require('../libs/logger.js');
-const tokenCtrl = require('./tokenController.js');
+const http = require('http');
 
 /*
 	retrieves username & password details
@@ -11,7 +11,7 @@ const tokenCtrl = require('./tokenController.js');
 		*/
 async function logUser(ctx) {
 	logger.trace(`Logging user ${ctx.params.username}`);
-	let promise = new Promise((resolve, reject) => {
+	let getUserPromise = new Promise((resolve, reject) => {
 		db.all(`select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}';`, function (err, row) {
 			if (err) {
 				logger.error(err);
@@ -19,7 +19,7 @@ async function logUser(ctx) {
 			}
 
 			if (row && row.length === 1) {
-				logger.trace(`User ${ctx.params.username} logged`);
+				logger.trace(`User ${ctx.params.username} retrieved`);
 				let user = row[0];
 				resolve(
 					{
@@ -35,24 +35,62 @@ async function logUser(ctx) {
 		});
 	});
 
-	let res;
-	try {
-		loginState = await promise;
-		if (loginState.status === 'ok') {
-			ctx.params.userid = loginState.userid;
-			tokenState = await tokenCtrl.createToken(ctx);
-			res = { userid: loginState.userid, token: tokenState.token, color: loginState.color };
-		}
-	}
-	catch (e) {
-		logger.error(e);
-	}
+	loginState = await getUserPromise;
 	
-	if (res !== undefined && res.userid !== undefined)
-		ctx.ok(res);
-	else
-		ctx.noContent();
+	if (loginState.status === 'ok')
+	{
+		let getTokenPromise = new Promise((resolve, reject) => {
+			try {
+				let putData = JSON.stringify({ userid: loginState.userid });
+	
+				if (loginState.status === 'ok') {
+	
+					var options = {
+						hostname: 'localhost',
+						port: 8068,
+						path: '/tokens',
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json;charset=UTF-8',
+							'Content-Length': Buffer.byteLength(putData),
+						},
+					};
+	
+					var req = http.request(options, function (res) {
+						res.setEncoding('utf8');
+						res.on('data', function (chunk) {
+							logger.trace('BODY: ' + JSON.parse(chunk).token);
+	
+							resolve({ userid: loginState.userid, token: JSON.parse(chunk).token, color: loginState.color });
+						});
+					});
+	
+					req.on('error', (e) => {
+						console.error(`problem with request: ${e.message}`);
+						reject(e);
+					});
+	
+					req.write(putData);
+					req.end();
+				}
+			}
+			catch (e) {
+				logger.error(e);
+				reject(e);
+			}
+		});
+	
+		let response = await getTokenPromise.catch((err) => {
+			logger.error(err);
+			ctx.noContent();
+		 });
+	
+		 ctx.ok(response);
+	}
+	else ctx.noContent();
+
 }
+
 
 /*
 	checks that a given username is free
