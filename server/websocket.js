@@ -54,32 +54,16 @@ wsServer.on('request', function (request) {
     logger.trace((new Date()) + ' Connection accepted.');
 
     connection.on('message', function (message) {
-        let msg = JSON.parse(message.utf8Data);
-        logger.debug(msg)
-        connection.sendUTF(JSON.stringify({
-            userId: msg.userId,
-            content: msg.content,
-            msgdt: msg.msgdt,
-            // username: message.username,
-        }));
-        // setInterval(function () {
-        //     let r = Math.floor(Math.random() * 3 + 1);
-        //     connection.sendUTF(JSON.stringify({
-        //         userId: r,
-        //         msg: r,
-        //         msgdt: Date.now(),
-        //         username: 'johndoe'
-        //     }));
-        // }, 1000);
-
-        // if (message.type === 'utf8') {
-        //     console.log('Received Message: ' + message.utf8Data);
-        //     connection.sendUTF(message.utf8Data);
-        // }
-        // else if (message.type === 'binary') {
-        //     console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-        //     connection.sendBytes(message.binaryData);
-        // }
+        if (message.type === 'utf8') {
+            let msg = JSON.parse(message.utf8Data);
+            logger.debug(msg);
+            connection.sendUTF(JSON.stringify({
+                userId: msg.userId,
+                content: msg.content,
+                msgdt: msg.msgdt,
+                // username: message.username,
+            }));
+        }
     });
     connection.on('close', function (reasonCode, description) {
         logger.trace((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
