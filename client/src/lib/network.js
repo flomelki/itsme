@@ -3,7 +3,6 @@ export default class Network {
     var req = new XMLHttpRequest();
 
     req.open('GET', url, true);
-    // req.setRequestHeader("Accept-Encoding", "gzip, deflate");
 
     req.onreadystatechange = function (aEvt) {
       if (req.readyState === 4) {
@@ -41,6 +40,7 @@ export default class Network {
 } // end export
 
 function manageResponse(req, callback) {
+  console.dir(req)
   switch (req.status) {
     case (200):
       if (callback) callback({ status: 'ok', rawResponse: req.response === 'OK' ? '' : JSON.parse(req.response) })
