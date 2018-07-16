@@ -91,12 +91,11 @@ async function logUser(ctx) {
 
 }
 
-
 /*
 	checks that a given username is free
 	returns
-		either 'ok' status
-		either 'nok' status
+		either 200 status if username is free
+		either 204 status if username is not free
 		*/
 async function checkUser(ctx) {
 	if (await getUsername(ctx.params.username))
@@ -109,7 +108,8 @@ async function checkUser(ctx) {
 	records a username + password
 	generates a random color for this user
 	returns
-		TODO
+		either 200 status if creation ok
+		either 204 status if creation not ok
 		*/
 async function createUser(ctx) {
 	if (await getUsername(ctx.request.body.username)) {
