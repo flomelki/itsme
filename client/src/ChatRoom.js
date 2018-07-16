@@ -29,7 +29,7 @@ class ChatRoom extends Component {
       let data = JSON.parse(event.data);
       if (data.userid !== undefined) {
         let messages = _this.state.messages;
-        messages.push({ key: btoa(data.timestamp), message: data.message, timestamp: data.timestamp, userid: data.userid, username: _this.props.username });
+        messages.push({ key: btoa(data.timestamp), message: data.message, timestamp: data.timestamp, userid: data.userid, username: data.username });
         _this.setState({ messages: messages });
       }
     }
@@ -57,7 +57,7 @@ class ChatRoom extends Component {
     Network.getAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_MSG_PORT}/messages/10/${lasttimestamp}`, (res) => {
       if (res.rawResponse !== undefined && res.rawResponse.length > 0)
       {
-        let messages = res.rawResponse.map(x => { return { key: btoa(x.timestamp), message: x.message, timestamp: x.timestamp, userid: x.userid, username: _this.props.username } });
+        let messages = res.rawResponse.map(x => { return { key: btoa(x.timestamp), message: x.message, timestamp: x.timestamp, userid: x.userid, username: x.username } });
         messages = messages.concat(_this.state.messages);
         console.dir(messages)
         _this.setState({ messages: messages });

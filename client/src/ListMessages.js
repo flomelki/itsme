@@ -18,7 +18,7 @@ class ListMessages extends Component {
             return _.orderBy(this.props.messages, ['date'], ['desc']).map((el) =>
                 <div key={el.key} style={{ 'display': 'flow-root' }}>
                     <div className={'msg ' + (el.userid.toString() === this.props.userid.toString() ? ' float-left' : ' float-right')} style={{ 'borderColor': 'darkgrey' }}>
-                        <div className='msg-date'>{`${new Date(el.timestamp).toLocaleDateString()} ${new Date(el.timestamp).toLocaleTimeString()}`}<br/>{`${this.props.username} says:`}</div>
+                        <div className='msg-date'>{`${new Date(el.timestamp).toLocaleDateString()} ${new Date(el.timestamp).toLocaleTimeString()}`}<br/>{`${el.username} says:`}</div>
                         <div>{el.message}</div>
                     </div>
                 </div>
