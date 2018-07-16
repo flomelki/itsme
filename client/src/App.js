@@ -13,7 +13,7 @@ class App extends Component {
   constructor() {
     super();
 console.log(process.env)
-    this.state = { userId : null, username : null, token : null, userColor : null };
+    this.state = { userid : null, username : null, token : null, userColor : null };
   }
 
   render() {
@@ -22,24 +22,24 @@ console.log(process.env)
       return (
         <div className='container justify-content-md-center'>
           <div className="row justify-content-md-center">
-            <LoginBox callback={(userId, username, token, userColor) => this.setLoggedState(userId, username, token, userColor)} />
+            <LoginBox callback={(userid, username, token, userColor) => this.setLoggedState(userid, username, token, userColor)} />
           </div>
         </div>
       );
     }
     else {
-      return (<ChatRoom callback={(userId, username, token) => this.setLoggedState(userId, username, token)} token={this.state.token} userId={this.state.userId} username={this.state.username} />);
+      return (<ChatRoom callback={(userid, username, token) => this.setLoggedState(userid, username, token)} token={this.state.token} userid={this.state.userid} username={this.state.username} />);
     }
   }
 
-  setLoggedState(userId, username, token, userColor) {
+  setLoggedState(userid, username, token, userColor) {
 
-    this.setState({ userId : userId, username : username, token : token })
+    this.setState({ userid : userid, username : username, token : token })
   }
 
   loggedState()
   {
-    return this.state.userId !== null;
+    return this.state.userid !== null;
   }
 
 

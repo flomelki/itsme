@@ -40,7 +40,6 @@ export default class Network {
 } // end export
 
 function manageResponse(req, callback) {
-  console.dir(req)
   switch (req.status) {
     case (200):
       if (callback) callback({ status: 'ok', rawResponse: req.response === 'OK' ? '' : JSON.parse(req.response) })

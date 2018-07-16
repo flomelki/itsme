@@ -1,6 +1,7 @@
 :root
 {
   --talk-height: 5em;
+  --load-height: 1em;
 }
 
 html {
@@ -26,8 +27,28 @@ body {
 
 #messages
 {
-  height: calc(100% - var(--talk-height));
+  height: calc(100% - var(--talk-height) - var(--load-height));
   overflow-y: auto;
+}
+
+#load
+{
+  height: var(--load-height);
+}
+
+#loadbox
+{
+  color: grey;
+  border-radius: 10px;
+	border-width: 1px;
+  border-style: groove;
+  background-color: #fdf8f0;
+}
+
+#loadbox:hover
+{
+  background-color: #ffe8c4;
+  cursor: pointer;
 }
 
 #talk

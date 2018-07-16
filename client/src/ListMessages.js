@@ -9,7 +9,7 @@ import './ListMessages.css';
 class ListMessages extends Component {
     propTypes: {
         messages: React.PropTypes.array,
-        userId: React.propTypes.string,
+        userid: React.propTypes.string,
         username: React.propTypes.string,
     };
 
@@ -17,9 +17,9 @@ class ListMessages extends Component {
         if (this.props.messages.length > 0)
             return _.orderBy(this.props.messages, ['date'], ['desc']).map((el) =>
                 <div key={el.key} style={{ 'display': 'flow-root' }}>
-                    <div className={'msg ' + (el.userId.toString() === this.props.userId.toString() ? ' float-left' : ' float-right')} style={{ 'borderColor': 'darkgrey' }}>
-                        <div className='msg-date'>{`${new Date(el.msgdt).toLocaleDateString()} ${new Date(el.msgdt).toLocaleTimeString()}`}<br/>{`${this.props.username} says:`}</div>
-                        <div>{el.msg}</div>
+                    <div className={'msg ' + (el.userid.toString() === this.props.userid.toString() ? ' float-left' : ' float-right')} style={{ 'borderColor': 'darkgrey' }}>
+                        <div className='msg-date'>{`${new Date(el.timestamp).toLocaleDateString()} ${new Date(el.timestamp).toLocaleTimeString()}`}<br/>{`${this.props.username} says:`}</div>
+                        <div>{el.message}</div>
                     </div>
                 </div>
             );
