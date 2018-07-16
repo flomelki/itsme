@@ -24,7 +24,7 @@ app.use(respond());
 
 // API routes
 app.use(Logger());
-router.use('/msg', require('./routes/message'));
+router.use('/messages', require('./routes/message'));
 app.use(router.routes());
 app.use(router.allowedMethods());
 

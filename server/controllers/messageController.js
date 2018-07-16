@@ -54,8 +54,9 @@ async function retrieveMsg(ctx) {
 		status
 		*/
 async function createMsg(ctx) {
+	logger.trace(`insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userId}', '${ctx.request.body.timestamp}')`);
 	try {
-		db.run(`insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userid}', '${ctx.request.body.timestamp}')`);
+		db.run(`insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userId}', '${ctx.request.body.timestamp}')`);
 		ctx.ok();
 	}
 	catch (e)
