@@ -36,15 +36,14 @@ async function logUser(ctx) {
 	});
 
 	loginState = await getUserPromise;
-	
-	if (loginState.status === 'ok')
-	{
+
+	if (loginState.status === 'ok') {
 		let getTokenPromise = new Promise((resolve, reject) => {
 			try {
 				let putData = JSON.stringify({ userid: loginState.userid });
-	
+
 				if (loginState.status === 'ok') {
-	
+
 					var options = {
 						hostname: 'localhost',
 						port: 8068,
@@ -55,21 +54,21 @@ async function logUser(ctx) {
 							'Content-Length': Buffer.byteLength(putData),
 						},
 					};
-	
+
 					var req = http.request(options, function (res) {
 						res.setEncoding('utf8');
 						res.on('data', function (chunk) {
 							logger.trace('BODY: ' + JSON.parse(chunk).token);
-	
+
 							resolve({ userid: loginState.userid, token: JSON.parse(chunk).token, color: loginState.color });
 						});
 					});
-	
+
 					req.on('error', (e) => {
 						console.error(`problem with request: ${e.message}`);
 						reject(e);
 					});
-	
+
 					req.write(putData);
 					req.end();
 				}
@@ -79,13 +78,13 @@ async function logUser(ctx) {
 				reject(e);
 			}
 		});
-	
+
 		let response = await getTokenPromise.catch((err) => {
 			logger.error(err);
 			ctx.noContent();
-		 });
-	
-		 ctx.ok(response);
+		});
+
+		ctx.ok(response);
 	}
 	else ctx.noContent();
 
@@ -126,7 +125,7 @@ function getUsername(username) {
 	let promise = new Promise((resolve, reject) => {
 		db.all(`select * from users where username = '${username}';`, function (err, row) {
 			if (err) {
-				console.dir(err)
+				logger.error(err);
 				throw (err);
 			}
 
@@ -139,9 +138,41 @@ function getUsername(username) {
 	return promise;
 }
 
+/*
+	gets common data linked to given userid
+	returns
+		userid / username if the userid is well found in database
+		otherwise 204 status
+		*/
+async function getUserById(ctx) {
+	let query = `select userid, username from users where userid = ${ctx.params.userid};`;
+	logger.trace(query);
+	let promise = new Promise((resolve, reject) => {
+		db.all(query, function (err, row) {
+			if (err) {
+				logger.error(err);
+				throw (err);
+			}
+
+			if (row.length === 1)
+				resolve(row[0]);
+			else
+				reject();
+		});
+	})
+
+	let response = await promise.catch((err) => {
+		if (err)	logger.error(err);
+		ctx.noContent();
+	});
+	logger.trace(response)
+	ctx.ok(response);
+}
+
 
 module.exports = {
 	logUser,
 	checkUser,
 	createUser,
+	getUserById,
 }
