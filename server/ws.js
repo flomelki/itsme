@@ -20,7 +20,6 @@ wss.broadcast = function broadcast(data) {
 };
 
 wss.on('connection', function connection(ws) {
-  
   // data : {userId, content, msgdt}
   ws.on('message', function incoming(data) {
   
@@ -30,7 +29,7 @@ wss.on('connection', function connection(ws) {
         let parsedData = JSON.parse(data);
 
         // storage on db
-        let putData = JSON.stringify({ message: parsedData.content, userId: parsedData.userId, timestamp: parsedData.msgdt });
+        let putData = JSON.stringify({ message: parsedData.message, userId: parsedData.userId, timestamp: parsedData.timestamp });
         msgOptions.headers =
           {
             'Content-Type': 'application/json;charset=UTF-8',

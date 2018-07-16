@@ -9,9 +9,14 @@ const logger = require('../libs/logger.js');
 		either 'nok' status
 		*/
 async function retrieveMsg(ctx) {
-	logger.trace(`Retrieving messages`);
+	let query = +ctx.params.fromdt > 0
+		? `select * from messages where timestamp < ${ctx.params.fromdt} order by timestamp desc limit ${ctx.params.number};`
+		: `select * from messages order by timestamp desc limit ${ctx.params.number};`;
+	
+	logger.trace(query);
+
 	let promise = new Promise((resolve, reject) => {
-		db.all(`select top ${ctx.params.number} from message where timestamp < '${ctx.params.timestamp}' order by timestamp desc;`, function (err, row) {
+		db.all(query, function (err, row) {
 			if (err) {
 				logger.error(err);
 				reject(err);
@@ -22,7 +27,7 @@ async function retrieveMsg(ctx) {
 				resolve(
 					{
 						status: 'ok',
-						messages : row,
+						messages: row,
 					});
 			}
 			else {
@@ -35,7 +40,7 @@ async function retrieveMsg(ctx) {
 	try {
 		msgState = await promise;
 		if (msgState.status === 'ok') {
-			res = res.messages;
+			res = msgState.messages;
 		}
 	}
 	catch (e) {
@@ -54,13 +59,13 @@ async function retrieveMsg(ctx) {
 		status
 		*/
 async function createMsg(ctx) {
-	logger.trace(`insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userId}', '${ctx.request.body.timestamp}')`);
+	let query = `insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userId}', '${ctx.request.body.timestamp}')`;
+	logger.trace(query);
 	try {
-		db.run(`insert into messages (message, userid, timestamp) values( '${ctx.request.body.message}', '${ctx.request.body.userId}', '${ctx.request.body.timestamp}')`);
+		db.run(query);
 		ctx.ok();
 	}
-	catch (e)
-	{
+	catch (e) {
 		logger.error(e);
 		ctx.noContent();
 	}
