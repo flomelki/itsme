@@ -83,7 +83,7 @@ class LoginBox extends Component {
           </div>
         </div>
         <div className='row mx-auto'>
-          <div className='col-md-12'>{this.state.loginStatus === 'nok' ? 'Loggin failed' : this.state.subscribeStatus === 'nok' ? 'Subscription failed' : this.state.subscribeStatus === 'ok' ? 'Subscription succeeded. Please now login' : ''}</div>
+          <div className='col-md-12'>{this.state.loginStatus === 'nok' ? 'Login failed' : this.state.subscribeStatus === 'nok' ? 'Subscription failed' : this.state.subscribeStatus === 'ok' ? 'Subscription succeeded. Please now login' : ''}</div>
         </div>
       </div>
     );
