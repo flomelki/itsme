@@ -12,7 +12,6 @@ import './bootstrap.css';
 class App extends Component {
   constructor() {
     super();
-console.log(process.env)
     this.state = { userid : null, username : null, token : null, userColor : null };
   }
 
@@ -41,8 +40,6 @@ console.log(process.env)
   {
     return this.state.userid !== null;
   }
-
-
 }
 
 export default App;
