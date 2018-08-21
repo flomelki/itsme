@@ -10,9 +10,10 @@ const http = require('http');
 		either 'nok' status
 		*/
 async function logUser(ctx) {
-	logger.trace(`Logging user ${ctx.params.username}`);
+	let query = `select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}' and authorized = 1;`;
+	logger.trace(query);
 	let getUserPromise = new Promise((resolve, reject) => {
-		db.all(`select * from users where username = '${ctx.params.username}' and password = '${ctx.params.pwd}';`, function (err, row) {
+		db.all(query, function (err, row) {
 			if (err) {
 				logger.error(err);
 				reject(err);
@@ -87,7 +88,6 @@ async function logUser(ctx) {
 		ctx.ok(response);
 	}
 	else ctx.noContent();
-
 }
 
 /*
@@ -113,7 +113,7 @@ async function checkUser(ctx) {
 async function createUser(ctx) {
 	if (await getUsername(ctx.request.body.username)) {
 		let randomColor = `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`;
-		db.run(`insert into users values(null, '${ctx.request.body.username}', '${ctx.request.body.pwd}', '${randomColor}')`);
+		db.run(`insert into users values(null, '${ctx.request.body.username}', '${ctx.request.body.pwd}', '${randomColor}', 0)`);
 		ctx.ok();
 	}
 	else {

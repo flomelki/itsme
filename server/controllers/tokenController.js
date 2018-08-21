@@ -12,7 +12,6 @@ async function createToken(ctx) {
     if (userid === undefined)
     {
         logger.trace(`Userid empty`);
-        console.dir(ctx.request)
         ctx.noContent();
         return;
     }
@@ -60,15 +59,14 @@ async function refreshToken(ctx) {
 				reject(err);
 			}
 
-            logger.debug(row)
             if (row && row.length === 1)
             {
                 let now = Date.now();
                 let end = now + 24 * 3600 * 1000;
                 
-                logger.debug(`now : ${now}`)
-                logger.debug(`current token end date : ${row[0].enddate}`)
-                logger.debug(`next token end date : ${end}`)
+                // logger.debug(`now : ${now}`)
+                // logger.debug(`current token end date : ${row[0].enddate}`)
+                // logger.debug(`next token end date : ${end}`)
                 
                 if (row[0].enddate > now)
                 {
