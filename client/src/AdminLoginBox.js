@@ -10,9 +10,18 @@ class AdminLoginBox extends LoginBox
         super();
     }
 
+    handleLogin(res) {
+      this.resetStatuses();
+      if (res.status === 'ok') {
+        this.props.callback(res.rawResponse.adminid);
+      }
+      else
+        this.setState({ loginStatus: res.status });
+    }
+
     login() {
         let password = sha1(sha1(document.getElementById('password').value).toString()+salt).toString();
-        Network.getAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_USER_PORT}/admin/${document.getElementById('username').value}/${password}`, (res) => this.handleLogin(res));
+        Network.getAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_ADMIN_USER_PORT}/admin/${document.getElementById('username').value}/${password}`, (res) => this.handleLogin(res));
       }
 
     loginDisable()

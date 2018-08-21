@@ -12,20 +12,6 @@ class LoginBox extends Component {
     this.state = { loginStatus: null, subscribeStatus: null, usernameOk: false, pwdOk: false };
   }
 
-  handleLogin(res) {
-    this.resetStatuses();
-    if (res.status === 'ok') {
-      this.props.callback(res.rawResponse.userid, document.getElementById('username').value, res.rawResponse.token, res.rawResponse.color);
-    }
-    else
-      this.setState({ loginStatus: res.status });
-  }
-
-  handleSubscribe(res) {
-    this.resetStatuses();
-    this.setState({ subscribeStatus: res.status });
-  }
-
   resetStatuses() {
     this.setState({ loginStatus: null, subscribeStatus: null });
   }
@@ -35,7 +21,6 @@ class LoginBox extends Component {
     let pwdOk = document.getElementById('password').value.length >= 3;
     this.setState({ usernameOk: usernameOk, pwdOk: pwdOk });
   }
-
 
   render() {
     return (
