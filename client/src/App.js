@@ -1,6 +1,6 @@
 // Components
 import React, { Component } from 'react';
-import LoginBox from './LoginBox';
+import UserLoginBox from './UserLoginBox';
 import ChatRoom from './ChatRoom';
 
 // CSS classes
@@ -21,7 +21,7 @@ class App extends Component {
       return (
         <div className='container justify-content-md-center'>
           <div className="row justify-content-md-center">
-            <LoginBox callback={(userid, username, token, userColor) => this.setLoggedState(userid, username, token, userColor)} />
+            <UserLoginBox callback={(userid, username, token, userColor) => this.setLoggedState(userid, username, token, userColor)} />
           </div>
         </div>
       );

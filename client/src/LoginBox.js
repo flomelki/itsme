@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import './bootstrap.css';
 import './LoginBox.css';
-import Network from './lib/network.js';
-import sha1 from 'crypto-js/sha1';
-const salt = 'wzf1tW?!';
 
 class LoginBox extends Component {
   propTypes: {
@@ -39,15 +36,6 @@ class LoginBox extends Component {
     this.setState({ usernameOk: usernameOk, pwdOk: pwdOk });
   }
 
-  login() {
-    let password = sha1(sha1(document.getElementById('password').value).toString()+salt).toString();
-    Network.getAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_USER_PORT}/users/${document.getElementById('username').value}/${password}`, (res) => this.handleLogin(res));
-  }
-
-  subscribe() {
-    let password = sha1(sha1(document.getElementById('password').value).toString()+salt).toString();
-    Network.putAsyncRequest(`http://${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_USER_PORT}/users/`, JSON.stringify({ 'username': document.getElementById('username').value, 'pwd': password }), (res) => this.handleSubscribe(res));
-  }
 
   render() {
     return (
@@ -72,11 +60,11 @@ class LoginBox extends Component {
         </div>
         <div className='row mx-auto'>
           <div className="btn-group col-md-12" role="group">
-            <button id="btnLogin" type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary"
+            <button id="btnLogin" type="button" disabled={this.loginDisable()} className="btn btn-secondary"
               onClick={() => { this.login(); }}
               onTouchStart={() => { this.login(); }}
               >Login</button>
-            <button id="btnSubscribe" type="button" disabled={!(this.state.usernameOk && this.state.pwdOk)} className="btn btn-secondary"
+            <button id="btnSubscribe" type="button" disabled={this.subscribeDisable()} className="btn btn-secondary"
               onClick={() => { this.subscribe(); }}
               onTouchStart={() => { this.subscribe(); }}
               >Subscribe</button>
