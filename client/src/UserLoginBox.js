@@ -6,6 +6,7 @@ const salt = 'wzf1tW?!';
 class UserLoginBox extends LoginBox {
   constructor() {
     super();
+    this.state.title = "Welcome in itsme !";
   }
 
   handleLogin(res) {

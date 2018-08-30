@@ -9,7 +9,7 @@ class LoginBox extends Component {
 
   constructor() {
     super();
-    this.state = { loginStatus: null, subscribeStatus: null, usernameOk: false, pwdOk: false };
+    this.state = { loginStatus: null, subscribeStatus: null, usernameOk: false, pwdOk: false, title : "Default" };
   }
 
   resetStatuses() {
@@ -25,7 +25,7 @@ class LoginBox extends Component {
   render() {
     return (
       <div className='loginbox col-md-6 col-12' >
-        <div className='row'><header className='col'><h4>Connectez-vous sur itsme!</h4></header></div>
+        <title className='row'><header className='col'><h4 id="loginTitle">{this.state.title}</h4></header></title>
         <div className='row'>
           <div className="input-group mb-3 col">
             <div className="input-group-prepend">

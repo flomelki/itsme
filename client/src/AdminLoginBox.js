@@ -8,6 +8,7 @@ class AdminLoginBox extends LoginBox
     constructor()
     {
         super();
+        this.state.title = "Welcome, admin";
     }
 
     handleLogin(res) {
