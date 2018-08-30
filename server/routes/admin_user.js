@@ -4,6 +4,7 @@ const router = new Router();
 
 router.get('/', adminCtrl.getAllUsers);
 router.get('/:username/:pwd', adminCtrl.logAdmin);
-router.post('/', adminCtrl.enableUser);
+router.post('/enable', adminCtrl.enableUser);
+router.post('/disable', adminCtrl.disableUser);
 
 module.exports = router.routes();
