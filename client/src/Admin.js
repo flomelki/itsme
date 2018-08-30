@@ -1,6 +1,7 @@
 // Components
 import React, { Component } from 'react';
 import AdminLoginBox from './AdminLoginBox';
+import AdminRoom from './AdminRoom';
 
 // CSS classes
 import './bootstrap.css';
@@ -12,7 +13,7 @@ class Admin extends Component {
   }
 
   render() {
-    if (!this.loggedState()) {
+    if (!this.loggedState() && process.env.REACT_APP_DEBUG_MODE !== "true") {
 
       return (
         <div className='container justify-content-md-center'>
@@ -23,7 +24,7 @@ class Admin extends Component {
       );
     }
     else
-      return <div>TODO</div>
+      return <AdminRoom></AdminRoom>
   }
 
   setLoggedState(adminid) {
